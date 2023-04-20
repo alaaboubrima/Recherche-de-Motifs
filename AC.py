@@ -243,7 +243,7 @@ if __name__ == "__main__":
         for i in range(10):
 	        # Début du chronomètre
             start_time = time.time()
-            aho_chorasick = AhoCorasick(mots[i][0:10])
+            aho_chorasick = AhoCorasick(mots[1][0:i+1])
             result = aho_chorasick.search_mots(text)
             # Fin du chronomètre
             end_time = time.time()

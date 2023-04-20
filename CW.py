@@ -96,7 +96,7 @@ def create_echec_fonction(motif):
 
 
 
-with open('text/text2.txt', 'r') as f:
+with open('text/text.txt', 'r') as f:
         content = f.read()
         text = content
 
@@ -135,7 +135,7 @@ with open('text/text2.txt', 'r') as f:
         plt.plot(x_values, y_valuesINT)
         plt.xlabel('Nombre de motifs')
         plt.ylabel("Temps d'exécution (ms)")
-        plt.title("DURÉE D'EXÉCUTION D'AHO-CORASICK ALGORITHME SELON LE NOMBRE DE MOTIFS")
+        plt.title("DURÉE D'EXÉCUTION DE COMMENTZ-WALTER ALGORITHME SELON LE NOMBRE DE MOTIFS")
         plt.show()
 
   

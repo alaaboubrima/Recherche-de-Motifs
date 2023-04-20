@@ -82,7 +82,7 @@ def rabin_karp_multiple(text, patterns):
 
 
 
-with open('text/text2.txt', 'r') as f:
+with open('text/text.txt', 'r') as f:
         content = f.read()
         text = content
 
@@ -109,7 +109,7 @@ with open('text/text2.txt', 'r') as f:
             # Début du chronomètre
             start_time = time.time()
 
-            rabin_karp_multiple(text, mots[0][0:i+1])
+            rabin_karp_multiple(text, mots[i])
             
             # Fin du chronomètre
             end_time = time.time()
@@ -121,5 +121,5 @@ with open('text/text2.txt', 'r') as f:
         plt.plot(x_values, y_valuesINT)
         plt.xlabel('Nombre de motifs')
         plt.ylabel("Temps d'exécution (ms)")
-        plt.title("DURÉE D'EXÉCUTION D'AHO-CORASICK ALGORITHME SELON LE NOMBRE DE MOTIFS")
+        plt.title("DURÉE D'EXÉCUTION DE RABIN-KARP ALGORITHME SELON LA LONGUEUR DE MOTIFS")
         plt.show()

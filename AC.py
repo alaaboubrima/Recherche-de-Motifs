@@ -6,6 +6,7 @@
 # et la valeur est la liste des index du mot correspondant
 
 import time
+import matplotlib.pyplot as plt
 from collections import defaultdict
 
 # Les tableaux et les files d'attente ont été implémentés à l'aide de listes.
@@ -193,7 +194,7 @@ class AhoCorasick:
 
 if __name__ == "__main__":
     # Début du chronomètre
-    start_time = time.time()
+    # start_time = time.time()
     
     with open('text/text.txt', 'r') as f:
         content = f.read()
@@ -204,19 +205,57 @@ if __name__ == "__main__":
         #     print(char)
         #distinct_chars = set(text)
 	    
-        mots = ["hi"]
-        
 
-        aho_chorasick = AhoCorasick(mots)
-        result = aho_chorasick.search_mots(text)
+        # exemple simple
 
-        for mot in result:
-            for i in result[mot]:
-                print("Le mot", mot, "apparaît de", i, "à", i+len(mot)-1)
+        # mots = ["Alice", "nothing", "hello", "nice", "seemed", "normal", "chapter", "he", "did", "end"]
+        # aho_chorasick = AhoCorasick(mots)
+        # result = aho_chorasick.search_mots(text)
+
+        # for mot in result:
+        #     for i in result[mot]:
+        #         print("Le mot", mot, "apparaît de", i, "à", i+len(mot)-1)
                 
-        # Fin du chronomètre
-        end_time = time.time()
+        # # Fin du chronomètre
+        # end_time = time.time()
         
-        print("Temps écoulé : ", (end_time - start_time) * 1000, " ms")
+        # print("Temps écoulé : ", (end_time - start_time) * 1000, " ms")
 
 
+
+
+        # construction du graphe
+        x_values = []
+        y_values = []
+        # construction d'un tableau de 10 tableaux de 10 motifs 
+        mots = [
+		        ['my', 'he', 'yo', 'of', 'do', 'us', 'no', 'ok', 'hi', 'oh'],
+                ['she', 'bee', 'dae', 'oil', 'kai', 'old', 'new', 'him', 'her', 'his'],
+                ['alar', 'rock', 'slat', 'gaup', 'dhai', 'tanh', 'thro', 'rump', 'arar', 'pint'],
+                ['jheel', 'bemat', 'chine', 'yourn', 'smoky', 'bebog', 'lamin', 'fitty', 'arise', 'trout'],
+                ['acuity', 'vespid', 'reckon', 'coempt', 'hakeem', 'jinket', 'charge', 'usself', 'doddie', 'shasta'],
+                ['punjabi', 'upsweep', 'bundook', 'wyandot', 'tittery', 'crinose', 'gloater', 'archsee', 'upshoot', 'koranic'],
+                ['dirigent', 'coemploy', 'apicitis', 'yengeese', 'slothful', 'enquirer', 'retation', 'ballogan', 'devonian', 'babouche'],
+                ['prompture', 'meandrous', 'plowlight', 'catkinate', 'violaceae', 'oxytropis', 'spongeous', 'unarrival', 'delegatee', 'whitetail'],
+                ['saucerless', 'occultness', 'unalarming', 'pictorical', 'expectedly', 'plastidome', 'vialmaking', 'ostensibly', 'dispreader', 'zoological'],
+                ['supernatant', 'borzicactus', 'thunderlike', 'purushartha', 'forniciform', 'prerailroad', 'collyweston', 'naggingness', 'uncongealed', 'lubritorian']                
+		]
+        for i in range(10):
+	        # Début du chronomètre
+            start_time = time.time()
+            aho_chorasick = AhoCorasick(mots[i][0:10])
+            result = aho_chorasick.search_mots(text)
+            # Fin du chronomètre
+            end_time = time.time()
+            x_values.append(i+1)
+            y_values.append((end_time - start_time) * 1000)
+            y_valuesINT = [int(x) for x in y_values]
+            print(i, "Temps écoulé : ", y_valuesINT[i], " ms")
+            
+        plt.plot(x_values, y_valuesINT)
+        plt.xlabel('Nombre de motifs')
+        plt.ylabel("Temps d'exécution (ms)")
+        plt.title("DURÉE D'EXÉCUTION D'AHO-CORASICK ALGORITHME SELON LE NOMBRE DE MOTIFS")
+        plt.show()
+
+  

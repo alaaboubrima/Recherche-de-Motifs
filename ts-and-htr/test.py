@@ -36,7 +36,7 @@ def recherche_occurrences(T, M):
 def build_HTR(TS):
     n = len(TS)
     HTR = []
-    HTR.append((TS[0][0], '', '-'))
+    HTR.append((TS[0][1], TS[0][0], '', '-'))
 
     for i in range(1, n):
         str = ""
@@ -47,8 +47,8 @@ def build_HTR(TS):
             str += suffix1[lcp]
             lcp += 1
         if str == "":
-            str ="e"
-        HTR.append((TS[i][0], str, lcp))
+            str ="\u03B5"
+        HTR.append((TS[i][1], TS[i][0], str, lcp))
     
     return HTR
 
@@ -58,7 +58,7 @@ text = "CACGTACGTACTA"
 word = "ACG"
 test = build_HTR(create_suffix_table(text))
 # Créer un DataFrame Pandas à partir du tableau
-df = pd.DataFrame(test, columns=['suffixe', 'lcp', 'HTR'])
+df = pd.DataFrame(test, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR'])
 
 # Afficher le DataFrame
 print(df)

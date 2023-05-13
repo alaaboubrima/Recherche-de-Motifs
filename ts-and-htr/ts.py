@@ -31,6 +31,20 @@ def recherche_occurrences(T, M):
     fin = f
     return TS[deb:fin+1], exist
 
+def build_HTR(TS):
+    n = len(TS)
+    HTR = [0] * n
+    
+    for i in range(1, n):
+        lcp = 0
+        suffix1 = TS[i][0]
+        suffix2 = TS[i - 1][0]
+        while lcp < len(suffix1) and lcp < len(suffix2) and suffix1[lcp] == suffix2[lcp]:
+            lcp += 1
+        HTR[i] = lcp
+    
+    return HTR
+
 
 # Exemple d'utilisation :
 text = "CACGTACGTACTA"

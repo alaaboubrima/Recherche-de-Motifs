@@ -36,7 +36,7 @@ def recherche_occurrences(T, M):
 def build_HTR(TS):
     n = len(TS)
     HTR = []
-    HTR.append((TS[0][1], TS[0][0], '', '-'))
+    HTR.append((TS[0][1], TS[0][0], '', 0))
 
     for i in range(1, n):
         str = ""
@@ -54,11 +54,36 @@ def build_HTR(TS):
 
 
 # Exemple d'utilisation :
-text = "CACGTACGTACTA"
+text = "ACGACACGCG"
 word = "ACG"
-test = build_HTR(create_suffix_table(text))
-# Créer un DataFrame Pandas à partir du tableau
-df = pd.DataFrame(test, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR'])
 
+indice = []
+for suffixe, i in recherche_occurrences(text, word)[0]:
+    indice.append(i)
+if recherche_occurrences(text, word)[1] == True:
+    print(f"Le mot '{word}' a été trouvé à l'indice {indice}")
+else:
+    print(f"Le mot '{word}' n'a pas été trouvé dans le texte")
+
+
+htr = build_HTR(create_suffix_table(text))
+# Créer un DataFrame Pandas à partir du tableau
+df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR'])
 # Afficher le DataFrame
 print(df)
+
+# 4 - 1
+max = max(i[3] for i in htr)
+print("le(s) plus long(s) facteur(s) répété(s) dans le texte : ", end=" ")
+for i in htr:
+    if i[3] == max:
+        print(i[2], end = " ")
+        
+
+# 4 - 2
+arr = []
+for i in range(len(htr)-2):
+    for j in range(len(htr[i+1][2])):
+        if htr[i+1][2][0:j+1] == htr[i+2][2][0:j+1] and htr[i+1][2][0:j+1] not in arr:
+            arr.append(htr[i+1][2][0:j+1])
+print("\nles facteurs qui se répètent au moins 3 fois : ", arr)

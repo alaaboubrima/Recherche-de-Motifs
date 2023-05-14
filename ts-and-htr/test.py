@@ -1,6 +1,6 @@
 import pandas as pd
 
-def create_suffix_table(text):
+def table_suffix(text):
     # Créer la table des suffixes à partir du texte donné
     suffix_table = []
     for i in range(len(text)):
@@ -12,7 +12,7 @@ def create_suffix_table(text):
 def recherche_occurrences(T, M):
     exist = False
     n = len(T)
-    TS = create_suffix_table(T) # table des suffixes triée
+    TS = table_suffix(T) # table des suffixes triée
     d, f = 0, n-1
     while d < f:
         milieu = (d + f) // 2
@@ -54,29 +54,26 @@ def build_HTR(TS):
 
 
 # Exemple d'utilisation :
-text = "ACGACACGCG"
+text = "GATGATTGAG"
 word = "ACG"
 
-indice = []
-for suffixe, i in recherche_occurrences(text, word)[0]:
-    indice.append(i)
-if recherche_occurrences(text, word)[1] == True:
-    print(f"Le mot '{word}' a été trouvé à l'indice {indice}")
-else:
-    print(f"Le mot '{word}' n'a pas été trouvé dans le texte")
+# indice = []
+# for suffixe, i in recherche_occurrences(text, word)[0]:
+#     indice.append(i)
+# if recherche_occurrences(text, word)[1] == True:
+#     print(f"Le mot '{word}' a été trouvé à l'indice {indice}")
+# else:
+#     print(f"Le mot '{word}' n'a pas été trouvé dans le texte")
 
+ts = table_suffix(text)
+htr = build_HTR(ts)
 
-htr = build_HTR(create_suffix_table(text))
-# Créer un DataFrame Pandas à partir du tableau
-df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR'])
-# Afficher le DataFrame
-print(df)
 
 # 4 - 1
-max = max(i[3] for i in htr)
-print("le(s) plus long(s) facteur(s) répété(s) dans le texte : ", end=" ")
+le_max = max(i[3] for i in htr)
+#print("le(s) plus long(s) facteur(s) répété(s) dans le texte : ", end=" ")
 for i in htr:
-    if i[3] == max:
+    if i[3] == le_max:
         print(i[2], end = " ")
         
 
@@ -86,4 +83,53 @@ for i in range(len(htr)-2):
     for j in range(len(htr[i+1][2])):
         if htr[i+1][2][0:j+1] == htr[i+2][2][0:j+1] and htr[i+1][2][0:j+1] not in arr:
             arr.append(htr[i+1][2][0:j+1])
-print("\nles facteurs qui se répètent au moins 3 fois : ", arr)
+#print("\nles facteurs qui se répètent au moins 3 fois : ", arr)
+
+
+print(table_suffix(text))
+def inverse_table_suffix(ts):
+    its = [0] * len(ts)
+    for i in range(len(ts)):
+        its[ts[i][1]] = i
+    return its
+its = inverse_table_suffix(ts)
+print(its)
+print(htr)
+
+
+
+def lgCondidat(htr, its):
+    lgC = [0] * len (htr)
+    for i in range(len(htr)):
+        if its[i] < len(htr) - 1:
+            lgC[i] = 1 + max(htr[its[i]][3], htr[its[i]+1][3])
+        # la derniere case
+        else: 
+            lgC[i] = 1 + htr[its[i]][3] 
+
+    return lgC
+lgC = lgCondidat(htr, its)
+print(lgC)
+htr = [(t[0], t[1], t[2], t[3], its[i], lgC[i]) for i, t in enumerate(htr)]
+
+def lgC_facts(text, htr):
+    pcf = []
+    for i in range(len(htr)):
+        if i + htr[i][5] <= len(htr):
+            pcf.append(text[i:i+htr[i][5]])
+        else:
+            pcf.append("-")
+    return pcf
+
+
+facts = lgC_facts(htr)
+
+print(plus_courts_fact(text, htr))
+
+for i in range(len(facts)):
+    if len(facts[i]) <= len(facts[i]):
+        print(facts[i])
+# Créer un DataFrame Pandas à partir du tableau
+df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR', 'ITS', 'lgC'])
+# Afficher le DataFrame
+print(df)

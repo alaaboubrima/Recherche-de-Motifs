@@ -122,12 +122,12 @@ def lgC_facts(text, htr):
     return pcf
 
 
-facts = lgC_facts(htr)
+facts = lgC_facts(text, htr)
 
-print(plus_courts_fact(text, htr))
+print(facts)
 
-for i in range(len(facts)):
-    if len(facts[i]) <= len(facts[i]):
+for i in range(len(facts) - 1):
+    if len(facts[i]) <= len(facts[i+1]) or i == len(facts) - 2:
         print(facts[i])
 # Créer un DataFrame Pandas à partir du tableau
 df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR', 'ITS', 'lgC'])

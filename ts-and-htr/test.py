@@ -54,7 +54,7 @@ def build_HTR(TS):
 
 
 # Exemple d'utilisation :
-text = "GATGATTGAG"
+text = "GATAAGATTGATG"
 word = "ACG"
 
 # indice = []
@@ -94,7 +94,7 @@ def inverse_table_suffix(ts):
     return its
 its = inverse_table_suffix(ts)
 print(its)
-print(htr)
+#print(htr)
 
 
 
@@ -109,7 +109,7 @@ def lgCondidat(htr, its):
 
     return lgC
 lgC = lgCondidat(htr, its)
-print(lgC)
+
 htr = [(t[0], t[1], t[2], t[3], its[i], lgC[i]) for i, t in enumerate(htr)]
 
 def lgC_facts(text, htr):
@@ -129,6 +129,25 @@ print(facts)
 for i in range(len(facts) - 1):
     if len(facts[i]) <= len(facts[i+1]) or i == len(facts) - 2:
         print(facts[i])
+
+def rep_super_maximale(htr):
+    reps = []
+    for i in htr:
+        print(i[2])
+    for i in range(1, len(htr)):
+        super = True
+        for j in range(1, len(htr)):
+            if htr[i][2] != htr[j][2]:
+                if htr[j][2].startswith(htr[i][2]) or htr[j][2].endswith(htr[i][2]):
+                    super = False
+        if super:
+            reps.append(htr[i][2])
+        reps = list(set(reps))
+    return reps
+
+print(rep_super_maximale(htr))
+
+
 # Créer un DataFrame Pandas à partir du tableau
 df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR', 'ITS', 'lgC'])
 # Afficher le DataFrame

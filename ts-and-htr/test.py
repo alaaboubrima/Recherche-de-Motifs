@@ -39,16 +39,38 @@ def build_HTR(TS):
     HTR.append((TS[0][1], TS[0][0], '', 0))
 
     for i in range(1, n):
-        str = ""
-        lcp = 0
+        lcp = ""
+        htr = 0
         suffix1 = TS[i][0]
         suffix2 = TS[i - 1][0]
-        while lcp < len(suffix1) and lcp < len(suffix2) and suffix1[lcp] == suffix2[lcp]:
-            str += suffix1[lcp]
-            lcp += 1
-        if str == "":
-            str ="\u03B5"
-        HTR.append((TS[i][1], TS[i][0], str, lcp))
+        while htr < len(suffix1) and htr < len(suffix2) and suffix1[htr] == suffix2[htr]:
+            lcp += suffix1[htr]
+            htr += 1
+        if lcp == "":
+            lcp ="\u03B5"
+        HTR.append((TS[i][1], TS[i][0], lcp, htr))
+    
+    return HTR
+
+
+def build_HTR_multiple(TS1, TS2):
+    TS1 = [(t[0], t[1], 1) for t in (TS1)]
+    TS2 = [(t[0], t[1], 2) for t in (TS2)]
+
+    TS = TS1 + TS2
+    TS.sort()
+    print(TS)
+    n = len(TS)
+    HTR = []
+    HTR.append((TS[0][0], TS[0][1], TS[0][2] , 0))
+
+    for i in range(1, n):
+        htr = 0
+        suffix1 = TS[i][0]
+        suffix2 = TS[i - 1][0]
+        while htr < len(suffix1) and htr < len(suffix2) and suffix1[htr] == suffix2[htr]:
+            htr += 1
+        HTR.append((TS[i][0], TS[i][1], TS[i][2], htr))
     
     return HTR
 
@@ -152,3 +174,19 @@ print(rep_super_maximale(htr))
 df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR', 'ITS', 'lgC'])
 # Afficher le DataFrame
 print(df)
+
+
+text1 = "bcabbcab"
+text2 = "caabba"
+text3 = "cbcabb"
+ts1 = table_suffix(text1)
+ts2 = table_suffix(text2)
+htr2 = build_HTR_multiple(ts1, ts2)
+
+df = pd.DataFrame(htr2, columns=['texte[TS[i]:]', 'TS[i]', 'Text', 'HTR'])
+print(df)
+# maxim = htr2[0][3]
+# for i in range(htr2):
+#     if htr2[i][3] > maxim and htr2[i+1][3] > maxim and htr[i][2] != htr[i+1][2]:
+#         tab.append()
+    

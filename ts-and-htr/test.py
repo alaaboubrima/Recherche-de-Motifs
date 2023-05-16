@@ -178,15 +178,41 @@ print(df)
 
 text1 = "bcabbcab"
 text2 = "caabba"
-text3 = "cbcabb"
+text3 = "a-b-cd-ef-gh"
+text4 = "a.b.cd.ef.gh"
+
 ts1 = table_suffix(text1)
 ts2 = table_suffix(text2)
+ts3 = table_suffix(text3)
+ts4 = table_suffix(text4)
+
+
 htr2 = build_HTR_multiple(ts1, ts2)
+htr3 = build_HTR_multiple(ts3, ts4)
 
 df = pd.DataFrame(htr2, columns=['texte[TS[i]:]', 'TS[i]', 'Text', 'HTR'])
 print(df)
-# maxim = htr2[0][3]
-# for i in range(htr2):
-#     if htr2[i][3] > maxim and htr2[i+1][3] > maxim and htr[i][2] != htr[i+1][2]:
-#         tab.append()
+
+def plus_long(htr):
+    paires_consecutives = []
+    for i in range(len(htr)-1):
+        if htr[i][2] != htr[i+1][2]:
+            paires_consecutives.append((htr[i+1][3], i+1))
+            # le i pour sauvgarder l'indice ou on a trouver cette paire
+
+    paires_consecutives = sorted(paires_consecutives, reverse=True)
     
+    # paires_consecutives[0][1] contient l'indice du plus long fact dans la table HTR car il est triee
+    plus_long_fact = [paires_consecutives[0][1]]
+    # cette boucle pour le cas ou on a plus q'un seul fact commun
+    for i in range(len(paires_consecutives)-1):
+        if paires_consecutives[i+1][0] == paires_consecutives[i][0]:
+            plus_long_fact.append(paires_consecutives[i+1][1])
+        else:
+            break
+    facts = []
+    for i in plus_long_fact:
+        facts.append((i, htr[i][0][0:htr[i][3]]))
+    return sorted(facts)
+print(f"les plus long facteurs communs entre '{text1}' et '{text2}' sont {plus_long(htr2)}")
+print(f"les plus long facteurs communs entre '{text3}' et '{text4}' sont {plus_long(htr3)}")

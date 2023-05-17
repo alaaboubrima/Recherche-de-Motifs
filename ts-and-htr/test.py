@@ -204,17 +204,78 @@ while True:
 
 
         facts = lgC_facts(text, htr)
-
         df = pd.DataFrame(htr, columns=['TS[i]', 'texte[TS[i]:]', 'lcp', 'HTR', 'ITS', 'lgC'])
+        # Afficher la table HTR avec its et lgCondidat 
         print(df)
 
+        print("Tous les facteurs", facts)
+        print("Les plus courts facteurs uniques du texte")
         for i in range(len(facts) - 1):
             if len(facts[i]) <= len(facts[i+1]) or i == len(facts) - 2:
                 print(facts[i])
         pass
     elif user_input == "7":
-        pass
+        """
+        7. Déterminer les répétitions super-maximales du texte. 
+        """
+        def rep_super_maximale(htr):
+            reps = []
+            for i in htr:
+                print(i[2])
+            for i in range(1, len(htr)):
+                super = True
+                for j in range(1, len(htr)):
+                    if htr[i][2] != htr[j][2]:
+                        if htr[j][2].startswith(htr[i][2]) or htr[j][2].endswith(htr[i][2]):
+                            super = False
+                if super:
+                    reps.append(htr[i][2])
+                reps = list(set(reps))
+            return reps
+
+        print(rep_super_maximale(htr))
+
     elif user_input == "8":
+        """
+        8. A l'aide des structures TS et HTR, retrouver le plus long facteur commun entre deux textes T1 et T2.
+        """
+        def plus_long(htr):
+            paires_consecutives = []
+            for i in range(len(htr)-1):
+                if htr[i][2] != htr[i+1][2]:
+                    paires_consecutives.append((htr[i+1][3], i+1))
+                    # le i pour sauvgarder l'indice ou on a trouver cette paire
+
+            paires_consecutives = sorted(paires_consecutives, reverse=True)
+            
+            # paires_consecutives[0][1] contient l'indice du plus long fact dans la table HTR car il est triee
+            plus_long_fact = [paires_consecutives[0][1]]
+            # cette boucle pour le cas ou on a plus q'un seul fact commun
+            for i in range(len(paires_consecutives)-1):
+                if paires_consecutives[i+1][0] == paires_consecutives[i][0]:
+                    plus_long_fact.append(paires_consecutives[i+1][1])
+                else:
+                    break
+            facts = []
+            for i in plus_long_fact:
+                facts.append((i, htr[i][0][0:htr[i][3]]))
+            return sorted(facts)
+
+        text1 = "bcabbcab"
+        text2 = "caabba"
+        text3 = "a-b-cd-ef-gh"
+        text4 = "a.b.cd.ef.gh"
+
+        ts1 = table_suffix(text1)
+        ts2 = table_suffix(text2)
+        ts3 = table_suffix(text3)
+        ts4 = table_suffix(text4)
+        
+        htr2 = build_HTR_multiple(ts1, ts2)
+        htr3 = build_HTR_multiple(ts3, ts4)
+
+        print(f"les plus long facteurs communs entre '{text1}' et '{text2}' sont {plus_long(htr2)}")
+        print(f"les plus long facteurs communs entre '{text3}' et '{text4}' sont {plus_long(htr3)}")
         pass
     else:
         print("Invalid input. Please enter a number between 1 and 8.")
@@ -230,71 +291,7 @@ htr = build_HTR(ts)
 
 
 
-"""
-7. Déterminer les répétitions super-maximales du texte. 
-"""
-def rep_super_maximale(htr):
-    reps = []
-    for i in htr:
-        print(i[2])
-    for i in range(1, len(htr)):
-        super = True
-        for j in range(1, len(htr)):
-            if htr[i][2] != htr[j][2]:
-                if htr[j][2].startswith(htr[i][2]) or htr[j][2].endswith(htr[i][2]):
-                    super = False
-        if super:
-            reps.append(htr[i][2])
-        reps = list(set(reps))
-    return reps
-
-print(rep_super_maximale(htr))
 
 
 
 
-
-"""
-8. A l'aide des structures TS et HTR, retrouver le plus long facteur commun entre deux textes T1 et T2.
-"""
-def plus_long(htr):
-    paires_consecutives = []
-    for i in range(len(htr)-1):
-        if htr[i][2] != htr[i+1][2]:
-            paires_consecutives.append((htr[i+1][3], i+1))
-            # le i pour sauvgarder l'indice ou on a trouver cette paire
-
-    paires_consecutives = sorted(paires_consecutives, reverse=True)
-    
-    # paires_consecutives[0][1] contient l'indice du plus long fact dans la table HTR car il est triee
-    plus_long_fact = [paires_consecutives[0][1]]
-    # cette boucle pour le cas ou on a plus q'un seul fact commun
-    for i in range(len(paires_consecutives)-1):
-        if paires_consecutives[i+1][0] == paires_consecutives[i][0]:
-            plus_long_fact.append(paires_consecutives[i+1][1])
-        else:
-            break
-    facts = []
-    for i in plus_long_fact:
-        facts.append((i, htr[i][0][0:htr[i][3]]))
-    return sorted(facts)
-
-text1 = "bcabbcab"
-text2 = "caabba"
-text3 = "a-b-cd-ef-gh"
-text4 = "a.b.cd.ef.gh"
-
-ts1 = table_suffix(text1)
-ts2 = table_suffix(text2)
-ts3 = table_suffix(text3)
-ts4 = table_suffix(text4)
-
-
-htr2 = build_HTR_multiple(ts1, ts2)
-htr3 = build_HTR_multiple(ts3, ts4)
-
-df = pd.DataFrame(htr2, columns=['texte[TS[i]:]', 'TS[i]', 'Text', 'HTR'])
-print(df)
-
-print(f"les plus long facteurs communs entre '{text1}' et '{text2}' sont {plus_long(htr2)}")
-print(f"les plus long facteurs communs entre '{text3}' et '{text4}' sont {plus_long(htr3)}")
